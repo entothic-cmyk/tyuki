@@ -1,23 +1,23 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/auth/register", "destination": "/auth-register" },
-    { "source": "/api/auth/login",    "destination": "/auth-login" },
-    { "source": "/api/auth/logout",   "destination": "/auth-logout" },
-    { "source": "/api/auth/me",       "destination": "/auth-me" },
-    { "source": "/api/settings",      "destination": "/settings" },
-    { "source": "/api/chats",         "destination": "/chats" },
-    { "source": "/api/chats/:id",     "destination": "/chat-[id]?id=:id" },
-    { "source": "/api/chat",          "destination": "/chat-send" }
+    { "source": "/api/auth/register", "destination": "/api/auth-register" },
+    { "source": "/api/auth/login",    "destination": "/api/auth-login" },
+    { "source": "/api/auth/logout",   "destination": "/api/auth-logout" },
+    { "source": "/api/auth/me",       "destination": "/api/auth-me" },
+    { "source": "/api/settings",      "destination": "/api/settings" },
+    { "source": "/api/chats",         "destination": "/api/chats" },
+    { "source": "/api/chats/:id",     "destination": "/api/chat-[id]?id=:id" },
+    { "source": "/api/chat",          "destination": "/api/chat-send" }
   ],
   "functions": {
-    "auth-register.js": { "memory": 1024, "maxDuration": 60 },
-    "auth-login.js":    { "memory": 1024, "maxDuration": 60 },
-    "auth-logout.js":   { "memory": 512,  "maxDuration": 30 },
-    "auth-me.js":       { "memory": 512,  "maxDuration": 30 },
-    "chats.js":         { "memory": 1024, "maxDuration": 60 },
-    "chat-[id].js":     { "memory": 1024, "maxDuration": 60 },
-    "chat-send.js":     { "memory": 1024, "maxDuration": 60 },
-    "settings.js":      { "memory": 512,  "maxDuration": 30 }
+    "api/auth-register.js": { "memory": 1024, "maxDuration": 60 },
+    "api/auth-login.js":    { "memory": 1024, "maxDuration": 60 },
+    "api/auth-logout.js":   { "memory": 512,  "maxDuration": 30 },
+    "api/auth-me.js":       { "memory": 512,  "maxDuration": 30 },
+    "api/chats.js":         { "memory": 1024, "maxDuration": 60 },
+    "api/chat-[id].js":     { "memory": 1024, "maxDuration": 60 },
+    "api/chat-send.js":     { "memory": 1024, "maxDuration": 60 },
+    "api/settings.js":      { "memory": 512,  "maxDuration": 30 }
   }
 }
