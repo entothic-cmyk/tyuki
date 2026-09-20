@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/auth/register", "destination": "/auth-register" },
+    { "source": "/api/auth/login",    "destination": "/auth-login" },
+    { "source": "/api/auth/logout",   "destination": "/auth-logout" },
+    { "source": "/api/auth/me",       "destination": "/auth-me" },
+    { "source": "/api/settings",      "destination": "/settings" },
+    { "source": "/api/chats",         "destination": "/chats" },
+    { "source": "/api/chats/:id",     "destination": "/chat-[id]?id=:id" },
+    { "source": "/api/chat",          "destination": "/chat-send" }
+  ],
+  "functions": {
+    "auth-register.js": { "memory": 1024, "maxDuration": 60 },
+    "auth-login.js":    { "memory": 1024, "maxDuration": 60 },
+    "auth-logout.js":   { "memory": 512,  "maxDuration": 30 },
+    "auth-me.js":       { "memory": 512,  "maxDuration": 30 },
+    "chats.js":         { "memory": 1024, "maxDuration": 60 },
+    "chat-[id].js":     { "memory": 1024, "maxDuration": 60 },
+    "chat-send.js":     { "memory": 1024, "maxDuration": 60 },
+    "settings.js":      { "memory": 512,  "maxDuration": 30 }
+  }
+}
