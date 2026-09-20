@@ -1,10 +1,5 @@
 import crypto from 'crypto';
-import {
-  getSession,
-  getUserById,
-  saveSession,
-  deleteSession
-} from './_db.js';
+import sql, { init } from './_db.js';
 
 const COOKIE = 'bluebex_session';
 
@@ -30,21 +25,21 @@ export function clearCookieHeader() {
 }
 
 export async function getUser(req) {
+  await init();
   const cookies = parseCookies(req);
   const token = cookies[COOKIE];
   if (!token) return null;
 
-  const session = await getSession(token);
-  if (!session) return null;
-
-  const user = await getUserById(session.user_id);
-  if (!user) return null;
-
-  return { id: user.id, email: user.email, name: user.name };
+  const rows = await sql`
+    SELECT u.id, u.email, u.name
+    FROM sessions s
+    JOIN users u ON u.id = s.user_id
+    WHERE s.token = ${token}
+    LIMIT 1
+  `;
+  return rows[0] || null;
 }
 
 export function newSessionToken() {
   return crypto.randomBytes(32).toString('hex');
 }
-
-export { saveSession, deleteSession };

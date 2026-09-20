@@ -1,51 +1,60 @@
-import { kv } from '@vercel/kv';
+import postgres from 'postgres';
 
-export default kv;
+const sql = postgres(process.env.DATABASE_URL, {
+  ssl: 'require',
+  max: 1,
+  idle_timeout: 20,
+  connect_timeout: 10
+});
 
-export async function nextUserId() {
-  return await kv.incr('nextuserid');
+let initialized = false;
+
+export async function init() {
+  if (initialized) return;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS users (
+      id BIGSERIAL PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      name TEXT NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at BIGINT NOT NULL
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS sessions (
+      token TEXT PRIMARY KEY,
+      user_id BIGINT NOT NULL,
+      created_at BIGINT NOT NULL
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS chats (
+      id TEXT PRIMARY KEY,
+      user_id BIGINT NOT NULL,
+      title TEXT NOT NULL,
+      created_at BIGINT NOT NULL,
+      updated_at BIGINT NOT NULL
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS messages (
+      id BIGSERIAL PRIMARY KEY,
+      chat_id TEXT NOT NULL,
+      role TEXT NOT NULL,
+      content TEXT NOT NULL,
+      attachments TEXT,
+      created_at BIGINT NOT NULL
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS user_settings (
+      user_id BIGINT PRIMARY KEY,
+      theme TEXT DEFAULT 'dark'
+    )
+  `;
+
+  initialized = true;
 }
 
-export async function saveUser(user) {
-  await kv.set(`user:${user.email}`, user);
-  await kv.set(`userbyid:${user.id}`, user.email);
-}
-
-export async function getUserByEmail(email) {
-  return await kv.get(`user:${email}`);
-}
-
-export async function getUserById(id) {
-  const email = await kv.get(`userbyid:${id}`);
-  if (!email) return null;
-  return await kv.get(`user:${email}`);
-}
-
-export async function saveSession(token, userId) {
-  await kv.set(`session:${token}`, { user_id: userId, created_at: Date.now() });
-}
-
-export async function getSession(token) {
-  return await kv.get(`session:${token}`);
-}
-
-export async function deleteSession(token) {
-  await kv.del(`session:${token}`);
-}
-
-export async function addChatToUser(userId, chatId) {
-  const key = `userchats:${userId}`;
-  const list = (await kv.get(key)) || [];
-  list.unshift(chatId);
-  await kv.set(key, list);
-}
-
-export async function getUserChatIds(userId) {
-  return (await kv.get(`userchats:${userId}`)) || [];
-}
-
-export async function removeChatFromUser(userId, chatId) {
-  const key = `userchats:${userId}`;
-  const list = (await kv.get(key)) || [];
-  await kv.set(key, list.filter(id => id !== chatId));
-}
+export default sql;
