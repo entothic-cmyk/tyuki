@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bluebex AI</title>
+  <link rel="stylesheet" href="style.css?v=21" />
+  <script src="theme.js"></script>
+</head>
+<body class="chat">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand" id="brandBox">
+        <img src="logo.png" alt="Bluebex AI"
+             onerror="this.remove();document.getElementById('brandBox').classList.add('no-logo');" />
+      </div>
+      <div class="sidebar-icons">
+        <button id="sidebarSearchBtn" title="Search chats">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+        <button id="collapseBtn" title="Toggle sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <button class="new-chat" id="newChat" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>New chat</span>
+      <span>Ctrl+J</span>
+    </button>
+
+    <div class="history-label">Today</div>
+    <ul class="history" id="historyList"></ul>
+
+    <div class="sidebar-foot">
+      <div class="user-chip" id="userChip">
+        <div class="avatar" id="userAvatar">?</div>
+        <div class="name" id="userName">...</div>
+        <button class="icon-btn" id="settingsBtn" title="Settings" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="chat-main">
+    <div class="chat-header">
+      <span id="chatHeader">New chat</span>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme (Ctrl+K)"></button>
+    </div>
+
+    <div class="chat-empty" id="chatEmpty">
+      <div class="greeting">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2 L22 12 L12 22 L2 12 Z"/>
+        </svg>
+        <span id="greetingText">Hi. What can I do for you?</span>
+      </div>
+
+      <div class="chat-composer">
+        <div class="attach-preview" id="attachPreview"></div>
+        <form id="emptyForm">
+          <textarea id="emptyInput" placeholder="Message Bluebex AI..." rows="1"></textarea>
+          <div class="composer-actions">
+            <button type="button" class="chip icon-chip" id="emptyAttach" data-tip="Upload docs or images">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+              </svg>
+            </button>
+            <button type="button" class="chip" id="emptyThink" data-tip="Think step by step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>
+              </svg>
+              DeepThink
+            </button>
+            <button type="button" class="chip" id="emptySearch" data-tip="Search the web">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/>
+              </svg>
+              Search
+            </button>
+            <button type="submit" class="send" id="emptySendBtn" aria-label="Send">
+              <svg id="emptySendIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+              </svg>
+              <svg id="emptyStopIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+                <rect x="6" y="6" width="12" height="12" rx="2"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="messages" id="messages" hidden>
+      <div class="messages-inner" id="messagesInner"></div>
+    </div>
+
+    <div class="chat-input-wrap" id="chatInputWrap" hidden>
+      <div class="chat-input-wrap-inner">
+        <div class="attach-preview" id="attachPreviewBottom"></div>
+        <form class="chat-input" id="chatForm">
+          <textarea id="chatInput" rows="1" placeholder="Message Bluebex AI..."></textarea>
+          <div class="composer-actions">
+            <button type="button" class="chip icon-chip" id="attachBtn" data-tip="Upload docs or images">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+              </svg>
+            </button>
+            <button type="button" class="chip" id="bottomThink" data-tip="Think step by step">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>
+              </svg>
+              DeepThink
+            </button>
+            <button type="button" class="chip" id="bottomSearch" data-tip="Search the web">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/>
+              </svg>
+              Search
+            </button>
+            <button type="submit" id="sendBtn" class="send" aria-label="Send">
+              <svg id="sendIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+              </svg>
+              <svg id="stopIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+                <rect x="6" y="6" width="12" height="12" rx="2"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <input type="file" id="fileInput" hidden multiple
+           accept="image/*,.pdf,.txt,.md,.json,.csv,.js,.py,.html,.css,.log,.doc,.docx" />
+  </main>
+
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h3>Settings</h3>
+        <button class="modal-close" id="closeSettings" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-row">
+        <label>Theme</label>
+        <div class="theme-choices">
+          <button class="theme-choice" type="button" data-theme="light">Light</button>
+          <button class="theme-choice" type="button" data-theme="dark">Dark</button>
+          <button class="theme-choice" type="button" data-theme="system">System</button>
+        </div>
+      </div>
+      <div class="modal-row"><label>Account</label><span id="modalEmail"></span></div>
+      <div class="modal-row">
+        <label>Log out</label>
+        <button class="btn-secondary" id="logoutBtn" type="button">Log out</button>
+      </div>
+      <div class="modal-row">
+        <label>Delete all chats</label>
+        <button class="btn-danger" id="deleteAllBtn" type="button">Delete all</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="confirmModal" hidden>
+    <div class="modal">
+      <div class="modal-head"><h3 id="confirmTitle">Confirm</h3></div>
+      <p class="confirm-msg" id="confirmMsg">Are you sure?</p>
+      <div class="confirm-actions">
+        <button class="btn-secondary" id="confirmCancel" type="button">Cancel</button>
+        <button class="btn-danger" id="confirmOk" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="chat.js"></script>
+</body>
+</html>

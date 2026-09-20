@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bluebex AI — Into the Unknown</title>
+  <link rel="stylesheet" href="style.css?v=21" />
+  <script src="theme.js"></script>
+</head>
+<body class="landing">
+
+  <header class="nav">
+    <div class="brand" id="brandBox">
+      <img src="logo.png" alt="Bluebex AI"
+           onerror="this.remove();document.getElementById('brandBox').classList.add('no-logo');" />
+    </div>
+    <div class="nav-right" id="navRight">
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme (Ctrl+K)"></button>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="announce">
+      ✦ Bluebex AI V1 has been released, featuring improved reasoning and search. →
+    </div>
+
+    <h1 class="title">Into the Unknown</h1>
+
+    <form class="prompt-box" id="promptForm">
+      <div class="attach-preview" id="attachPreview"></div>
+      <textarea id="promptInput" placeholder="Ask anything, explore together" rows="2"></textarea>
+      <div class="prompt-actions">
+        <button type="button" class="chip icon-chip" id="attachBtn" title="Attach files">📎</button>
+        <button type="button" class="chip" id="thinkBtn">✦ DeepThink</button>
+        <button type="button" class="chip" id="searchBtn">🌐 Search</button>
+        <button type="submit" class="send" aria-label="Send">↑</button>
+      </div>
+      <input type="file" id="fileInput" hidden multiple
+             accept="image/*,.pdf,.txt,.md,.json,.csv,.js,.py,.html,.css,.log" />
+    </form>
+
+    <div class="cta-row">
+      <a href="chat.html" class="cta">💬 Chat with Bluebex AI</a>
+      <a href="#" class="cta">🔌 Use API Platform</a>
+    </div>
+  </main>
+
+  <script>renderThemeToggle(document.getElementById('themeToggle'));</script>
+  <script src="landing.js"></script>
+</body>
+</html>

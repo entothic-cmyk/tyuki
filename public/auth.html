@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bluebex AI — Sign in</title>
+  <link rel="stylesheet" href="style.css?v=21" />
+  <script src="theme.js"></script>
+</head>
+<body class="auth">
+
+  <div class="auth-card">
+    <div class="auth-brand" id="brandBox">
+      <img src="logo.png" alt="Bluebex AI"
+           onerror="this.remove();document.getElementById('brandBox').classList.add('no-logo');" />
+    </div>
+
+    <h2 id="authTitle">Log in</h2>
+
+    <form id="authForm" autocomplete="on">
+      <div class="field" id="nameField" hidden>
+        <input type="text" id="name" placeholder="Full name" autocomplete="name" />
+      </div>
+
+      <div class="field">
+        <input type="email" id="email" placeholder="Email address"
+               autocomplete="email" required />
+      </div>
+
+      <div class="field password-field">
+        <input type="password" id="password" placeholder="Password"
+               autocomplete="current-password" required minlength="6" />
+        <button type="button" class="eye" id="eyeBtn">👁</button>
+      </div>
+
+      <div class="field password-field" id="confirmField" hidden>
+        <input type="password" id="confirm" placeholder="Confirm password"
+               autocomplete="new-password" minlength="6" />
+        <button type="button" class="eye" id="eyeBtn2">👁</button>
+      </div>
+
+      <p class="auth-terms">
+        By signing up or logging in, you consent to Bluebex AI's
+        <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+      </p>
+
+      <div class="auth-links" id="loginLinks">
+        <a href="#" id="forgotLink">Forgot password?</a>
+        <a href="#" id="toRegister">Sign up</a>
+      </div>
+
+      <button type="submit" class="auth-submit" id="submitBtn">Log in</button>
+      <div class="auth-error" id="authError"></div>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <div class="oauth-row">
+        <button type="button" class="oauth-btn" onclick="alert('Google sign-in coming soon')">
+          Sign in with Google
+        </button>
+        <button type="button" class="oauth-btn" onclick="alert('Apple sign-in coming soon')">
+          Sign in with Apple
+        </button>
+      </div>
+    </form>
+
+    <a class="auth-back" href="index.html">← Back to home</a>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
