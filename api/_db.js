@@ -1,60 +1,44 @@
-import postgres from 'postgres';
+import { DatabaseSync } from 'node:sqlite';
 
-const sql = postgres(process.env.DATABASE_URL, {
-  ssl: 'require',
-  max: 1,
-  idle_timeout: 20,
-  connect_timeout: 10
-});
+const DB_PATH = process.env.RAILWAY_VOLUME_MOUNT_PATH
+  ? `${process.env.RAILWAY_VOLUME_MOUNT_PATH}/bluebex.db`
+  : 'bluebex.db';
 
-let initialized = false;
+const db = new DatabaseSync(DB_PATH);
+db.exec('PRAGMA journal_mode = WAL;');
 
-export async function init() {
-  if (initialized) return;
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    email         TEXT UNIQUE NOT NULL,
+    name          TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at    INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS sessions (
+    token      TEXT PRIMARY KEY,
+    user_id    INTEGER NOT NULL,
+    created_at INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS chats (
+    id         TEXT PRIMARY KEY,
+    user_id    INTEGER NOT NULL,
+    title      TEXT NOT NULL,
+    created_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS messages (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    chat_id     TEXT NOT NULL,
+    role        TEXT NOT NULL,
+    content     TEXT NOT NULL,
+    attachments TEXT,
+    created_at  INTEGER NOT NULL
+  );
+  CREATE TABLE IF NOT EXISTS user_settings (
+    user_id INTEGER PRIMARY KEY,
+    theme   TEXT DEFAULT 'dark'
+  );
+`);
 
-  await sql`
-    CREATE TABLE IF NOT EXISTS users (
-      id BIGSERIAL PRIMARY KEY,
-      email TEXT UNIQUE NOT NULL,
-      name TEXT NOT NULL,
-      password_hash TEXT NOT NULL,
-      created_at BIGINT NOT NULL
-    )
-  `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS sessions (
-      token TEXT PRIMARY KEY,
-      user_id BIGINT NOT NULL,
-      created_at BIGINT NOT NULL
-    )
-  `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS chats (
-      id TEXT PRIMARY KEY,
-      user_id BIGINT NOT NULL,
-      title TEXT NOT NULL,
-      created_at BIGINT NOT NULL,
-      updated_at BIGINT NOT NULL
-    )
-  `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS messages (
-      id BIGSERIAL PRIMARY KEY,
-      chat_id TEXT NOT NULL,
-      role TEXT NOT NULL,
-      content TEXT NOT NULL,
-      attachments TEXT,
-      created_at BIGINT NOT NULL
-    )
-  `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS user_settings (
-      user_id BIGINT PRIMARY KEY,
-      theme TEXT DEFAULT 'dark'
-    )
-  `;
-
-  initialized = true;
-}
-
-export default sql;
+export default db;
